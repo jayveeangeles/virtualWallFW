@@ -17,7 +17,7 @@ Inspired by various virtual wall implementations for Roomba, this project combin
 Only the main C file, Makefile and dist directories are included. The dist directory contains the latest hex file that can be programmed into the PIC.
 
 ## Hardware:
-Link to hardware (schematic and board files) will be posted soon...
+[Link to hardware](https://github.com/jayveeangeles/virtualWallHW)
 
 ## References:
 1) [Tiny Remote for iRobot Roomba](http://www.enide.net/webcms/index.php?page=tiny-remote)
