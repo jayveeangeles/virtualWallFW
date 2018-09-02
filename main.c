@@ -29,14 +29,15 @@
 #define VIRTUAL_WALL_CMD 162
 #define GET_BIT(x, y) x & (1 << y);
 #define T_ACQ 5
-#define DURATION_W_DELAYS 582
+#define DURATION_SECONDS 240
+#define DURATION_MINUTES 120
 #define LV_THRESH 553 // 2.7/5 * 1024
 
 void interrupt isr(void) {
     if (PIR1bits.TMR1IF == 1) // timer 1 interrupt flag
     {
         PIR1bits.TMR1IF = 0;           // interrupt must be cleared by software
-        TMR1H = 0x80;             // preset for timer1 MSB register
+        TMR1H = 0xE0;             // preset for timer1 MSB register
         TMR1L = 0;             // preset for timer1 LSB register
     }
 };
@@ -48,7 +49,8 @@ int main(int argc, char** argv) {
     unsigned int i;
     unsigned int bitValue;
     unsigned int adval;
-    unsigned int timeCounter;
+    unsigned int secondsCounter;
+    unsigned int minutesCounter;
 
     // General init
     OSCCON = 0x51; // Internal 2MHz osc.
@@ -70,13 +72,14 @@ int main(int argc, char** argv) {
     PSA = 0; // Assign prescalar to Timer0
     PWM_OFF;
     
-    //Timer1 Registers Prescaler= 8 - TMR1 Preset = 3998 - Freq = 0.02 Hz - Period = 60.095703 seconds
+    //Timer1 Registers 0.25s
+    // 1/32768 * prescale * (2^16 - preload timer)
     T1CONbits.T1CKPS1 = 0;   // bits 5-4  Prescaler Rate Select bits
     T1CONbits.T1CKPS0 = 0;   // bit 4
     T1CONbits.T1OSCEN = 1;   // bit 3 Timer1 Oscillator Enable Control bit 1 = on
     T1CONbits.nT1SYNC = 1;    // bit 2 Timer1 External Clock Input Synchronization Control bit...1 = Do not synchronize external clock input
     T1CONbits.TMR1CS = 1;    // bit 1 Timer1 Clock Source Select bit...1 = External clock
-    TMR1H = 0x80;             // preset for timer1 MSB register
+    TMR1H = 0xE0;             // preset for timer1 MSB register
     TMR1L = 0;             // preset for timer1 LSB register
     
     // Interrupt Registers
@@ -94,43 +97,48 @@ int main(int argc, char** argv) {
     ADCON0bits.ADON = 1;
 
     __delay_us(T_ACQ);
-    for (timeCounter = 0; timeCounter < DURATION_W_DELAYS; timeCounter++)
-    {
-        ADCON0bits.GO_nDONE = 1;
-        while(ADCON0bits.GO_nDONE){}
-        adval = ((unsigned int) ((ADRESH << 8) + ADRESL));
-        if (adval >= LV_THRESH)
+    for (minutesCounter = 0; minutesCounter < DURATION_MINUTES; minutesCounter++) {
+        for (secondsCounter = 0; secondsCounter < DURATION_SECONDS; secondsCounter++)
         {
-            GPIObits.GP1 = 0;
-        } 
-        else
-        {
-            GPIObits.GP1 = 1;
-        }
-        
-        for (i = 0; i < 8; i++) // Send a few IR bursts
-        {
-            bitValue = GET_BIT(VIRTUAL_WALL_CMD, i);
-            if (bitValue == 0) {
-                PWM_ON;
-                __delay_us(1000);
-                PWM_OFF;
-                __delay_us(3000);
-            } else {
-                PWM_ON;
-                __delay_us(3000);
-                PWM_OFF;
-                __delay_us(1000);
+            if ((secondsCounter % 5) == 0)
+            {
+                ADCON0bits.GO_nDONE = 1;
+                while(ADCON0bits.GO_nDONE){}
+                adval = ((unsigned int) ((ADRESH << 8) + ADRESL));
+                if (adval >= LV_THRESH)
+                {
+                    GPIObits.GP1 = 0;
+                } 
+                else
+                {
+                    GPIObits.GP1 = 1;
+                }
             }
-        }
-        
-        if (GPIObits.GP1)
-            GPIObits.GP1 = 0;
 
-        // Then sleep for a moment
-        T1CONbits.TMR1ON = 1;    // bit 0 enables timer
-        SLEEP();
-        T1CONbits.TMR1ON = 0;
+            for (i = 0; i < 8; i++) // Send a few IR bursts
+            {
+                bitValue = GET_BIT(VIRTUAL_WALL_CMD, i);
+                if (bitValue == 0) {
+                    PWM_ON;
+                    __delay_us(1000);
+                    PWM_OFF;
+                    __delay_us(3000);
+                } else {
+                    PWM_ON;
+                    __delay_us(3000);
+                    PWM_OFF;
+                    __delay_us(1000);
+                }
+            }
+
+            if (GPIObits.GP1)
+                GPIObits.GP1 = 0;
+
+            // Then sleep for a moment
+            T1CONbits.TMR1ON = 1;    // bit 0 enables timer
+            SLEEP();
+            T1CONbits.TMR1ON = 0;
+        }
     }
     
     ADCON0bits.ADON = 0;

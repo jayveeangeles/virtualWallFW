@@ -7,13 +7,15 @@
 [v ___ftpack __ftpack `(f  1 e 3 0 ]
 "86 /Applications/microchip/xc8/v1.45/sources/common/ftadd.c
 [v ___ftadd __ftadd `(f  1 e 3 0 ]
+"6 /Applications/microchip/xc8/v1.45/sources/common/lwmod.c
+[v ___lwmod __lwmod `(ui  1 e 2 0 ]
 "6 /Applications/microchip/xc8/v1.45/sources/pic/eeprom.c
 [v _eecpymem eecpymem `(v  1 e 1 0 ]
 "39
 [v _memcpyee memcpyee `(v  1 e 1 0 ]
-"35 /Users/vincentj/MPLABXProjects/Virtual_Wall_V1_PIC12F683.X/main.c
+"36 /Users/vincentj/MPLABXProjects/VirtualWall_V1_PIC12F683.X/main.c
 [v _isr isr `II(v  1 e 1 0 ]
-"47
+"48
 [v _main main `(i  1 e 2 0 ]
 "164 /Applications/microchip/xc8/v1.45/include/pic12f683.h
 [v _GPIO GPIO `VEuc  1 e 1 @5 ]
@@ -168,21 +170,33 @@
 [v _ANSELbits ANSELbits `VES63  1 e 1 @159 ]
 "1943
 [v _PSA PSA `VEb  1 e 0 @1035 ]
-"47 /Users/vincentj/MPLABXProjects/Virtual_Wall_V1_PIC12F683.X/main.c
+"48 /Users/vincentj/MPLABXProjects/VirtualWall_V1_PIC12F683.X/main.c
 [v _main main `(i  1 e 2 0 ]
 {
-"48
-[v main@i i `ui  1 a 2 9 ]
-"51
-[v main@timeCounter timeCounter `ui  1 a 2 7 ]
-"50
-[v main@adval adval `ui  1 a 2 5 ]
+"52
+[v main@secondsCounter secondsCounter `ui  1 a 2 15 ]
 "49
-[v main@bitValue bitValue `ui  1 a 2 3 ]
-"139
+[v main@i i `ui  1 a 2 13 ]
+"53
+[v main@minutesCounter minutesCounter `ui  1 a 2 11 ]
+"51
+[v main@adval adval `ui  1 a 2 9 ]
+"50
+[v main@bitValue bitValue `ui  1 a 2 7 ]
+"147
 } 0
-"35
+"6 /Applications/microchip/xc8/v1.45/sources/common/lwmod.c
+[v ___lwmod __lwmod `(ui  1 e 2 0 ]
+{
+"11
+[v ___lwmod@counter counter `uc  1 a 1 9 ]
+"6
+[v ___lwmod@divisor divisor `ui  1 p 2 4 ]
+[v ___lwmod@dividend dividend `ui  1 p 2 6 ]
+"26
+} 0
+"36 /Users/vincentj/MPLABXProjects/VirtualWall_V1_PIC12F683.X/main.c
 [v _isr isr `II(v  1 e 1 0 ]
 {
-"42
+"43
 } 0

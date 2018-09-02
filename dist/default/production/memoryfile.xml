@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
-  <executable name="dist/default/production/Virtual_Wall_V1_PIC12F683.X.production.hex">
+  <executable name="dist/default/production/VirtualWall_V1_PIC12F683.X.production.hex">
     <memory name="program">
       <units>words</units>
       <length>2048</length>
-      <used>221</used>
-      <free>1827</free>
+      <used>308</used>
+      <free>1740</free>
     </memory>
     <memory name="data">
       <units>bytes</units>
       <length>128</length>
-      <used>21</used>
-      <free>107</free>
+      <used>29</used>
+      <free>99</free>
     </memory>
   </executable>
 </project>
